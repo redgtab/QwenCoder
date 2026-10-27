@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+        android:background="@color/pink" android:gravity="center_vertical">
+        <ImageButton android:id="@+id/btn_back" android:layout_width="40dp" android:layout_height="40dp"
+            android:layout_marginLeft="4dp" android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null" android:src="@android:drawable/ic_menu_revert" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:layout_marginLeft="8dp"
+            android:text="崩溃日志" android:textColor="@color/white" android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:padding="8dp">
+        <Button android:id="@+id/btn_submit" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:text="提交 GitHub Issue" />
+        <Button android:id="@+id/btn_copy" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:text="复制日志" />
+        <Button android:id="@+id/btn_clear" android:layout_width="0dp" android:layout_weight="1"
+            android:layout_height="wrap_content" android:text="清除" />
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:padding="8dp">
+        <TextView android:id="@+id/tv_crash_log" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textIsSelectable="true"
+            android:textSize="12sp" android:fontFamily="monospace"
+            android:textColor="@color/text_primary" />
+    </ScrollView>
+</LinearLayout>

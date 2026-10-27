@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">BiliLite</string>
+    <string name="app_name">BiliLite TV</string>
     <string name="tab_popular">热门</string>
     <string name="tab_ranking">排行</string>
     <string name="tab_favorite">收藏</string>

@@ -29,7 +29,7 @@ class Http {
     }
 
     /** GET -> JSON；失败抛 IOException（带服务器 message） */
-    static JSONObject getJson(String url) throws Exception {
+    public static JSONObject getJson(String url) throws Exception {
         Request req = new Request.Builder().url(url).header("User-Agent", UA).build();
         try (Response r = client().newCall(req).execute()) {
             String body = r.body() != null ? r.body().string() : "";

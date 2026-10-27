@@ -753,10 +753,48 @@ public class BiliApi {
         });
     }
 
-    /** 检查更新：查询 GitHub Releases（redgtab/QwenCoder） */
+    /**
+     * 检查更新：优先读取仓库根目录的 update.txt（每次发版自动提交，含版本号与更新内容），
+     * 失败时回退到 GitHub Releases API。返回:
+     *   tag / name / body(更新内容) / apk(TV 专用 APK 下载地址) / source(txt|release)
+     */
     public void checkUpdate(final CB cb) {
         io.execute(() -> {
             try {
+                // 1) raw.githubusercontent update.txt —— 格式:
+                //    version=2.0.1
+                //    notes=修复xx; 新增yy （多行以 | 分隔显示）
+                try {
+                    java.net.URL u = new java.net.URL(
+                            "https://raw.githubusercontent.com/redgtab/QwenCoder/main/update.txt");
+                    java.net.HttpURLConnection hc = (java.net.HttpURLConnection) u.openConnection();
+                    hc.setConnectTimeout(8000); hc.setReadTimeout(8000);
+                    hc.setRequestProperty("User-Agent", UA);
+                    java.io.BufferedReader r = new java.io.BufferedReader(
+                            new java.io.InputStreamReader(hc.getInputStream(), "UTF-8"));
+                    StringBuilder sb = new StringBuilder(); String ln;
+                    while ((ln = r.readLine()) != null) sb.append(ln).append('\n');
+                    r.close();
+                    String ver = "", notes = "";
+                    for (String line : sb.toString().split("\n")) {
+                        int eq = line.indexOf('=');
+                        if (eq <= 0) continue;
+                        String k = line.substring(0, eq).trim(), v = line.substring(eq + 1).trim();
+                        if (k.equals("version")) ver = v; else if (k.equals("notes")) notes = v;
+                    }
+                    if (!ver.isEmpty()) {
+                        JSONObject out = new JSONObject();
+                        out.put("tag", ver.startsWith("v") ? ver : "v" + ver);
+                        out.put("name", "BiliLite TV " + ver);
+                        out.put("body", notes.replace("|", "\n"));
+                        out.put("apk", "");
+                        out.put("source", "txt");
+                        post(cb, out, null);
+                        return;
+                    }
+                } catch (Exception ignoreTxt) { /* fall through */ }
+
+                // 2) 回退 Releases API
                 JSONObject root = Http.getJson(
                         "https://api.github.com/repos/redgtab/QwenCoder/releases/latest");
                 JSONObject out = new JSONObject();
@@ -768,9 +806,11 @@ public class BiliApi {
                 if (assets != null) for (int i = 0; i < assets.length(); i++) {
                     JSONObject a = assets.getJSONObject(i);
                     String n = a.optString("name");
-                    if (n.endsWith(".apk")) { apk = a.getString("browser_download_url"); break; }
+                    if (n.contains("TV") && n.endsWith(".apk")) { apk = a.getString("browser_download_url"); break; }
+                    if (apk.isEmpty() && n.endsWith(".apk")) apk = a.getString("browser_download_url");
                 }
                 out.put("apk", apk);
+                out.put("source", "release");
                 post(cb, out, null);
             } catch (Exception e) { post(cb, null, e.toString()); }
         });

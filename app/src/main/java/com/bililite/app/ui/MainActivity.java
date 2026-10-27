@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bililite.app.BuildConfig;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,6 +95,40 @@ public class MainActivity extends AppCompatActivity {
 
         refreshLoginUi();
         switchTab(TAB_POPULAR);
+        checkStartupUpdate();
+    }
+
+    /** 启动时后台检查更新（update.txt），发现新版弹窗；每版本只提示一次 */
+    private void checkStartupUpdate() {
+        BiliApi.get(this).checkUpdate((data, err) -> {
+            if (err != null || data == null) return;
+            try {
+                String tag = data.getString("tag").replace("v", "").trim();
+                if (!SettingsActivity.isNewer(tag, BuildConfig.VERSION_NAME)) return;
+                String shownKey = "shown_update_" + tag;
+                if (BiliApi.get(this).prefsBool(shownKey, false)) return;
+                BiliApi.get(this).setPrefsBool(shownKey, true);
+                runOnUiThread(() -> new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("发现新版本 " + tag)
+                        .setMessage(data.optString("body", ""))
+                        .setPositiveButton("去下载", (d, w) -> {
+                            String apk = data.optString("apk", "");
+                            startActivity(new Intent(
+                                    android.content.Intent.ACTION_VIEW,
+                                    android.net.Uri.parse(apk.isEmpty()
+                                            ? "https://github.com/redgtab/QwenCoder/releases/latest"
+                                            : apk)));
+                        })
+                        .setNegativeButton("以后再说", null).show());
+            } catch (Exception ignore) {}
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // TV 遥控器返回：非首页 Tab 时回到热门，避免误退出
+        if (currentTab != TAB_POPULAR) { switchTab(TAB_POPULAR); return; }
+        super.onBackPressed();
     }
 
     @Override

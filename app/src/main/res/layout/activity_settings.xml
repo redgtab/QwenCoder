@@ -36,6 +36,10 @@
                 <TextView style="@style/SettingLabel" android:text="@string/setting_cache" />
                 <TextView style="@style/SettingValue" android:text="" />
             </LinearLayout>
+            <LinearLayout android:id="@+id/row_crash" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="查看崩溃日志 / 反馈 Bug" />
+                <TextView android:id="@+id/val_crash" style="@style/SettingValue" android:text="" />
+            </LinearLayout>
             <LinearLayout android:id="@+id/row_about" style="@style/SettingRow">
                 <TextView style="@style/SettingLabel" android:text="关于 BiliLite" />
                 <TextView style="@style/SettingValue" android:text="" />

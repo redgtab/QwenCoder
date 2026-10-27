@@ -1,0 +1,2 @@
+version=2.0.1
+notes=改为专有TV版APK（Leanback启动，遥控器D-Pad操作）|新增崩溃日志收集与GitHub Issue一键反馈|新增启动自动检查更新(update.txt)|优化图片加载与分页性能|修复部分已知Bug

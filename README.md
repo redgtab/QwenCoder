@@ -1,38 +1,41 @@
-# BiliLite
+# BiliLite TV
 
-一个基于哔哩哔哩公开 API 的第三方 Android 客户端，支持 **手机 (Android 4.4.3+ / API 19)** 与 **Android TV**（遥控器焦点导航）。界面简洁，设计参考 [bbll](https://github.com/luoxie00/bbll)、[bv](https://github.com/dooy/bv)、[newbv](https://github.com/newbv)、[blbl](https://github.com/Nicklaus233/blbl) 等项目。
+哔哩哔哩第三方 **Android TV 专用**客户端（基于公开 API，参考 bbll / blbl / NewBV 等项目）。
+从 v2.0.1 起**不再提供手机版**，仅发布 TV 版 APK。
+
+## 基本要求
+- Android **4.4.3+ (API 19)** 的 Android TV / 智能电视盒子
+- 遥控器 D-Pad 操作（返回键：非首页时自动回首页）
 
 ## 功能
-- 🏠 热门 / 🔥 排行榜 / 🔍 搜索 / ⭐ 我的收藏 / 🕘 观看历史
-- 👤 UP 主空间投稿列表、视频详情与分 P 列表
-- 📱 扫码登录（TV OAuth 接口，zxing 本地生成二维码 + 轮询登录状态）
-- 📺 TV 模式：Leanback Launcher 入口 + Banner，D-Pad 焦点高亮，调用系统播放器播放
-- 轻量：minSdk 19，无重型依赖（OkHttp 3.12 + zxing core）
+- 热门 / 排行 / 搜索（WBI 签名）
+- 扫码登录（TV 二维码）
+- 视频详情、分P、内置播放 + 外部播放器
+- 弹幕渲染（GZIP 解析、密度设置）
+- 画质切换（480P/720P/1080P/高码率/4K）
+- 评论、动态（自己/他人 UID）、关注/粉丝、收藏夹、历史记录
+- 点赞 / 投币 / 三连 / 收藏 / 发弹幕
+- 设置页（默认画质、弹幕开关与密度、缓存清理等）
+- **检查更新**：读取仓库根目录 `update.txt`（每次发版随 APK 一并提交），失败回退 GitHub Releases API
+- **崩溃收集**：未处理异常写入本地日志，可在 设置→崩溃日志 查看、复制、一键跳转 GitHub Issue 提交反馈
+
+## 版本规则
+版本号自 v2.0.1 起按补丁顺序递增：v2.0.1 → v2.0.2 → v2.0.3 …（不升大版本）。
+
+## update.txt 格式
+```
+version=2.0.1
+notes=更新点1|更新点2|更新点3
+```
+
+## 下载
+见 [Releases](../../releases)，文件名形如 `BiliLite-vX.Y.Z-TV-debug.apk`。
+安装：U盘/ADB `adb install BiliLite-vX.Y.Z-TV-debug.apk`。
 
 ## 构建
-```bash
-# 需要 JDK 17、Android SDK (platform 34, build-tools 34.0.0)
-export ANDROID_HOME=/path/to/android-sdk
-gradle assembleDebug
-# 产物: app/build/outputs/apk/debug/app-debug.apk
 ```
-
-## 安装
-```bash
-adb install app-debug.apk          # 手机或电视均可
+gradle assembleDebug   # minSdk 19, targetSdk 29, JDK 17
 ```
-
-## 技术说明
-- `app/src/main/java/com/bililite/app/api/BiliApi.java` — API 封装（md5 签名、Cookie 持久化 SESSDATA）
-- `ui/` — MainActivity(五 Tab)、SearchActivity、UserSpaceActivity、PlayActivity、LoginActivity、DetailsActivity(TV 转发)
-- 主题：`Theme.BiliLite`(手机浅色) / `Theme.BiliLite.TV`(电视深色)
 
 ## 免责声明
-本项目仅供学习交流，请勿用于商业用途。所有数据接口归属哔哩哔哩，使用造成的任何后果自负。
-
-## v2.0 更新内容
-- 修复登录（TV 扫码 + bili_jct 提取）与视频列表获取（web 接口 + app 端兜底、WBI 签名）
-- 新增：评论区、动态（自己的关注流 & 输入 UID 查看他人动态）、关注/粉丝列表、收藏夹二级页
-- 新增：内置播放（VideoView + 弹幕 DanmakuView 滚动渲染）、画质切换（720P/1080P/高码率/4K）
-- 新增：设置页（默认画质、弹幕开关、弹幕密度、自动播放、检查更新 GitHub Release、清缓存、关于）
-- 性能优化：图片懒加载缓存、分页预加载、IO 线程池、GZIP 弹幕解析
+仅供学习交流，请勿用于商业用途。所有数据来自哔哩哔哩公开接口。

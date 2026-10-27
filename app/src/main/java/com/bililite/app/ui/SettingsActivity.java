@@ -52,6 +52,10 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         bind(R.id.row_update, v -> checkUpdate());
+        bind(R.id.row_crash, v -> startActivity(new android.content.Intent(
+                this, CrashLogActivity.class)));
+        ((TextView) findViewById(R.id.val_crash)).setText(
+                com.bililite.app.CrashReport.hasNewCrash(this) ? "有崩溃记录!" : "");
         bind(R.id.row_cache, v -> {
             ImageLoader.clearDiskCache();
             toast("图片缓存已清除");
@@ -117,7 +121,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /** 版本号比较：1.2.3 > 1.2.0 */
-    static boolean isNewer(String latest, String current) {
+    public static boolean isNewer(String latest, String current) {
         String[] a = latest.split("\\."), b = current.split("\\.");
         for (int i = 0; i < Math.max(a.length, b.length); i++) {
             int x = i < a.length ? num(a[i]) : 0, y = i < b.length ? num(b[i]) : 0;
