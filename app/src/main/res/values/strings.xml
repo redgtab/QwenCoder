@@ -25,4 +25,23 @@
     <string name="up_title">UP主</string>
     <string name="settings_clear_history">清空观看历史</string>
     <string name="about">BiliLite · 基于公开 API 的第三方哔哩哔哩客户端\n仅供学习交流使用</string>
+    <string name="play_builtin">内置播放</string>
+    <string name="quality">画质</string>
+    <string name="danmaku_on">弹:开</string>
+    <string name="danmaku_off">弹:关</string>
+    <string name="comments">评论区</string>
+    <string name="no_comments">暂无评论或加载失败</string>
+    <string name="tab_dynamic">动态</string>
+    <string name="settings">设置</string>
+    <string name="setting_quality">默认画质</string>
+    <string name="setting_danmaku">弹幕开关</string>
+    <string name="setting_auto_play">自动内置播放</string>
+    <string name="setting_update">检查更新</string>
+    <string name="setting_cache">清除图片缓存</string>
+    <string name="setting_theme">深色模式</string>
+    <string name="current_version">当前版本</string>
+    <string name="following">关注</string>
+    <string name="follower">粉丝</string>
+    <string name="dynamic_empty">暂无动态（需登录并关注 UP 主）</string>
+    <string name="loading_more">加载更多…</string>
 </resources>

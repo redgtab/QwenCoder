@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@drawable/bg_tv_focus" android:focusable="true"
+    android:orientation="horizontal" android:padding="14dp">
+
+    <ImageView android:id="@+id/iv_uface" android:layout_width="40dp" android:layout_height="40dp"
+        android:contentDescription="@null" android:src="@drawable/ic_placeholder" />
+
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/tv_uname" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" />
+        <TextView android:id="@+id/tv_usign" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" android:ellipsize="end" android:maxLines="2"
+            android:textColor="@color/text_secondary" android:textSize="13sp" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/tv_ufans" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:textColor="@color/text_secondary" android:textSize="12sp" />
+</LinearLayout>

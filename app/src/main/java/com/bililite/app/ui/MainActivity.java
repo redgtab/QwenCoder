@@ -18,6 +18,7 @@ import com.bililite.app.api.BiliApi;
 import com.bililite.app.api.VideoItem;
 
 import org.json.JSONArray;
+import android.content.SharedPreferences;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tab_favorite)).setOnClickListener(v -> switchTab(TAB_FAV));
         ((TextView) findViewById(R.id.tab_history)).setOnClickListener(v -> switchTab(TAB_HIST));
         ((TextView) findViewById(R.id.tab_mine)).setOnClickListener(v -> switchTab(TAB_MINE));
+        ((TextView) findViewById(R.id.tab_dynamic)).setOnClickListener(v ->
+                startActivity(new Intent(this, DynamicActivity.class)));
+        ((TextView) findViewById(R.id.tab_settings)).setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
 
         findViewById(R.id.btn_search).setOnClickListener(
                 v -> startActivity(new Intent(this, SearchActivity.class)));
@@ -118,15 +123,14 @@ public class MainActivity extends AppCompatActivity {
         page = 1;
         highlightTab(tab);
         if (tab == TAB_MINE) {
-            // “我的”直接复用收藏视图；未登录则跳登录页
             if (!BiliApi.get(this).isLogin()) {
                 startActivity(new Intent(this, LoginActivity.class));
-                highlightTab(currentTab == TAB_MINE ? TAB_POPULAR : currentTab);
                 currentTab = TAB_POPULAR;
+                highlightTab(TAB_POPULAR);
                 loadFirstPage();
                 return;
             }
-            loadFirstPage();
+            showMineMenu();
             return;
         }
         loadFirstPage();
@@ -161,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
             }
             try {
                 JSONArray arr = data.getJSONArray("list");
-                List<VideoItem> got = VideoItem.listFrom(arr);
+                List<VideoItem> got = VideoItem.listFromWeb(arr);
                 if (got.isEmpty() && first) {
                     tvEmpty.setVisibility(View.VISIBLE);
                 } else {
@@ -179,15 +183,17 @@ public class MainActivity extends AppCompatActivity {
                 api.ranking("all", cb);
                 break;
             case TAB_FAV:
-            case TAB_MINE:
+                setLoading(false);
+                swipe.setRefreshing(false);
                 if (!api.isLogin()) {
-                    setLoading(false);
-                    swipe.setRefreshing(false);
                     tvEmpty.setText(getString(R.string.not_login));
                     tvEmpty.setVisibility(View.VISIBLE);
                     return;
                 }
-                api.favFolderList(cb);
+                startActivity(new Intent(MainActivity.this, FavFolderActivity.class));
+                currentTab = TAB_POPULAR;
+                highlightTab(TAB_POPULAR);
+                api.popular(1, cb);
                 break;
             case TAB_HIST:
                 if (!api.isLogin()) {
@@ -197,11 +203,54 @@ public class MainActivity extends AppCompatActivity {
                     tvEmpty.setVisibility(View.VISIBLE);
                     return;
                 }
-                api.history(cb);
+                api.history(0, cb);
+                break;
+            case TAB_MINE:
+                if (!api.isLogin()) {
+                    setLoading(false);
+                    swipe.setRefreshing(false);
+                    tvEmpty.setText(getString(R.string.not_login));
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    return;
+                }
+                showMineMenu();
                 break;
             default:
                 api.popular(page, cb);
         }
+    }
+
+    /** “我的”：弹出菜单 —— 关注 / 粉丝 / 空间 / 退出登录 */
+    private void showMineMenu() {
+        BiliApi api = BiliApi.get(this);
+        String[] opts = {getString(R.string.following), getString(R.string.follower),
+                getString(R.string.up_title), getString(R.string.logout)};
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(api.uname().isEmpty() ? "我的" : api.uname())
+                .setItems(opts, (d, w) -> {
+                    Intent i;
+                    if (w == 0) {
+                        i = new Intent(this, RelationActivity.class);
+                        i.putExtra("mid", api.uid());
+                        i.putExtra("fans", false);
+                        startActivity(i);
+                    } else if (w == 1) {
+                        i = new Intent(this, RelationActivity.class);
+                        i.putExtra("mid", api.uid());
+                        i.putExtra("fans", true);
+                        startActivity(i);
+                    } else if (w == 2) {
+                        i = new Intent(this, UserSpaceActivity.class);
+                        i.putExtra("mid", api.uid());
+                        i.putExtra("uname", api.uname());
+                        startActivity(i);
+                    } else {
+                        api.logout();
+                        switchTab(TAB_POPULAR);
+                    }
+                })
+                .setOnCancelListener(d -> { currentTab = TAB_POPULAR; highlightTab(TAB_POPULAR); loadFirstPage(); })
+                .show();
     }
 
     private void setLoading(boolean show) {
@@ -209,9 +258,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openVideo(VideoItem it) {
-        if (it.mid > 0 && currentTab == TAB_FAV) {
-            // 收藏文件夹点击 -> 暂以详情打开
-        }
         Intent in = new Intent(this, PlayActivity.class);
         in.putExtra("title", it.title);
         in.putExtra("bvid", it.bvid);

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+        android:background="@color/pink" android:gravity="center_vertical">
+        <ImageButton android:id="@+id/btn_back" android:layout_width="40dp" android:layout_height="40dp"
+            android:layout_marginLeft="4dp" android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null" android:src="@android:drawable/ic_menu_revert" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp" android:text="@string/settings"
+            android:textColor="@color/white" android:textSize="16sp" />
+    </LinearLayout>
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
+            <LinearLayout android:id="@+id/row_quality" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="@string/setting_quality" />
+                <TextView android:id="@+id/val_quality" style="@style/SettingValue" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/row_danmaku" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="@string/setting_danmaku" />
+                <TextView android:id="@+id/val_danmaku" style="@style/SettingValue" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/row_dm_limit" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="同屏弹幕数量" />
+                <TextView android:id="@+id/val_dm_limit" style="@style/SettingValue" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/row_auto_play" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="@string/setting_auto_play" />
+                <TextView android:id="@+id/val_auto_play" style="@style/SettingValue" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/row_update" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="@string/setting_update" />
+                <TextView android:id="@+id/val_version" style="@style/SettingValue" android:text="" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/row_cache" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="@string/setting_cache" />
+                <TextView style="@style/SettingValue" android:text="" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/row_about" style="@style/SettingRow">
+                <TextView style="@style/SettingLabel" android:text="关于 BiliLite" />
+                <TextView style="@style/SettingValue" android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

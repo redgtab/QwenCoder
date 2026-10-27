@@ -61,6 +61,8 @@
         <TextView android:id="@+id/tab_favorite" style="@style/TabText" android:text="@string/tab_favorite" />
         <TextView android:id="@+id/tab_history" style="@style/TabText" android:text="@string/tab_history" />
         <TextView android:id="@+id/tab_mine" style="@style/TabText" android:text="@string/tab_mine" />
+        <TextView android:id="@+id/tab_dynamic" style="@style/TabText" android:text="@string/tab_dynamic" />
+        <TextView android:id="@+id/tab_settings" style="@style/TabText" android:text="@string/settings" />
     </LinearLayout>
 
     <View

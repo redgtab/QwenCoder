@@ -54,6 +54,22 @@
             android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <activity
+            android:name=".ui.DynamicActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.FavFolderActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.RelationActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".DetailsActivity"
             android:exported="true"
             android:launchMode="singleTop">
