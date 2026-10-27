@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.bililite.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.bililite.app"
+        // Android 4.4.3 (KitKat) => API 19；同时支持手机与 TV
+        minSdk 19
+        targetSdk 29
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lint {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // appcompat 1.6.1 / material 1.11.0 是仍兼容 minSdk 19 的最后版本区间
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.13' // 最后支持 API 19 的 OkHttp
+    // zxing core（本地 jar，纯 Java）用于离线生成登录二维码
+    implementation files('libs/zxing-core-3.5.2.jar')
+}

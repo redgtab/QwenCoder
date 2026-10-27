@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:gravity="center_horizontal" android:orientation="vertical" android:padding="24dp">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" android:text="@string/qr_login"
+        android:textColor="@color/text_primary" android:textSize="20sp" android:textStyle="bold" />
+    <ImageView android:id="@+id/iv_qrcode" android:layout_width="240dp" android:layout_height="240dp"
+        android:layout_marginTop="24dp" android:background="@drawable/bg_card"
+        android:contentDescription="@null" android:padding="8dp" />
+    <TextView android:id="@+id/tv_status" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" android:gravity="center" android:text="@string/qrcode_tip"
+        android:textColor="@color/text_secondary" android:textSize="14sp" />
+    <Button android:id="@+id/btn_refresh" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" android:background="@drawable/bg_pill"
+        android:paddingLeft="24dp" android:paddingRight="24dp" android:text="@string/refresh_qrcode"
+        android:textColor="@color/white" />
+</LinearLayout>
