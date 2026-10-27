@@ -3,6 +3,7 @@ package com.bililite.app.ui;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;

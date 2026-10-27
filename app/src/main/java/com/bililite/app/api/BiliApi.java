@@ -210,7 +210,7 @@ public class BiliApi {
 
     /** 我的收藏（需要登录） */
     public void favFolderList(final CB cb) {
-        HttpUrl url = baseApp("https://app.bilibili.com/x/v2/collections").newBuilder()
+        HttpUrl url = HttpUrl.parse("https://app.bilibili.com/x/v2/collections").newBuilder()
                 .addQueryParameter("platform", "android")
                 .addQueryParameter("build", "6270500")
                 .addQueryParameter("mobi_app", "android")
@@ -221,7 +221,7 @@ public class BiliApi {
 
     /** 最近观看历史（需要登录） */
     public void history(final CB cb) {
-        HttpUrl url = baseApp("https://app.bilibili.com/x/v2/history").newBuilder()
+        HttpUrl url = HttpUrl.parse("https://app.bilibili.com/x/v2/history").newBuilder()
                 .addQueryParameter("platform", "android")
                 .addQueryParameter("build", "6270500")
                 .addQueryParameter("mobi_app", "android")
@@ -232,7 +232,7 @@ public class BiliApi {
 
     /** UP 主投稿列表 */
     public void userVideos(long mid, int page, final CB cb) {
-        HttpUrl url = baseApp("https://app.bilibili.com/x/v2/space/arc/search").newBuilder()
+        HttpUrl url = HttpUrl.parse("https://app.bilibili.com/x/v2/space/arc/search").newBuilder()
                 .addQueryParameter("mid", String.valueOf(mid))
                 .addQueryParameter("ps", "25")
                 .addQueryParameter("pn", String.valueOf(page))
@@ -243,7 +243,7 @@ public class BiliApi {
 
     /** 视频详情（分 P 信息） */
     public void videoDetail(String bvid, final CB cb) {
-        HttpUrl url = baseApp("https://app.bilibili.com/x/v2/view").newBuilder()
+        HttpUrl url = HttpUrl.parse("https://app.bilibili.com/x/v2/view").newBuilder()
                 .addQueryParameter("bvid", bvid)
                 .build();
         signedGetRaw(url, APP_SECRET, cb);

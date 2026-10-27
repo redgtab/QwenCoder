@@ -12,8 +12,6 @@
         <item name="colorAccent">@color/pink</item>
         <item name="android:windowBackground">@color/tv_bg</item>
     </style>
-</resources>
-
 
     <style name="TabText">
         <item name="android:layout_width">0dp</item>
@@ -23,3 +21,4 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/text_secondary</item>
     </style>
+</resources>
