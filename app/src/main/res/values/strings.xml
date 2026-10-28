@@ -37,7 +37,7 @@
     <string name="setting_danmaku">弹幕开关</string>
     <string name="setting_auto_play">自动内置播放</string>
     <string name="setting_update">检查更新</string>
-    <string name="setting_cache">清除图片缓存</string>
+    <string name="setting_cache">清除缓存（视频 output/bililite + 图片）</string>
     <string name="setting_theme">深色模式</string>
     <string name="current_version">当前版本</string>
     <string name="following">关注</string>

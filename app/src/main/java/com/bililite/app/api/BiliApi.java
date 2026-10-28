@@ -52,7 +52,10 @@ public class BiliApi {
         return sInstance;
     }
 
+    private final Context appCtx;
+
     private BiliApi(Context ctx) {
+        appCtx = ctx.getApplicationContext();
         prefs = ctx.getSharedPreferences("bili_cookie", Context.MODE_PRIVATE);
         client = new OkHttpClient.Builder()
                 .cookieJar(new PersistCookieJar(prefs))
@@ -684,6 +687,63 @@ public class BiliApi {
     /** 画质切换：设置里保存 qn（16=720P, 32=1080P, 64=1080P高码率, 80=1080P+需大会员, 112=4K） */
     public int qualityQn() { return prefs.getInt("quality_qn", 32); }
     public void setQualityQn(int qn) { prefs.edit().putInt("quality_qn", qn).apply(); }
+
+    /** 视频缓存目录：优先 /storage/emulated/0/output/bililite（内部共享存储），
+     *  其次 <内部存储根>/data/local/tmp/output/bililite（无需权限可写），
+     *  均不可用时回退应用私有 files/video_cache。 */
+    public java.io.File videoCacheDir() {
+        java.io.File best = null;
+        try {
+            java.io.File ext = new java.io.File(
+                    android.os.Environment.getExternalStorageDirectory(), "output/bililite");
+            if ((ext.exists() || ext.mkdirs()) && ext.canWrite()) best = ext;
+        } catch (Throwable ignored) { }
+        if (best == null) {
+            try {
+                java.io.File tmp = new java.io.File("/data/local/tmp/output/bililite");
+                if ((tmp.exists() || tmp.mkdirs()) && tmp.canWrite()) best = tmp;
+            } catch (Throwable ignored) { }
+        }
+        if (best == null) {
+            best = new java.io.File(appCtx.getFilesDir(), "video_cache");
+            if (!best.exists()) best.mkdirs();
+        }
+        return best;
+    }
+
+    /** 异步清理视频缓存，回调 err==null 表示成功，data=null */
+    public void clearVideoCache(final CB cb) {
+        io.execute(() -> {
+            deleteRecursive(videoCacheDir());
+            post(cb, null, null);
+        });
+    }
+
+    private static long deleteRecursive(java.io.File f) {
+        long size = 0;
+        if (f == null || !f.exists()) return 0;
+        if (f.isDirectory()) {
+            java.io.File[] children = f.listFiles();
+            if (children != null) for (java.io.File c : children) size += deleteRecursive(c);
+        }
+        long len = f.length();
+        if (f.delete()) size += len;
+        return size;
+    }
+
+    /** 缓存目录总大小（字节），同步调用（目录小，可接受） */
+    public long cacheSizeBytes() {
+        return dirSize(videoCacheDir());
+    }
+
+    private static long dirSize(java.io.File f) {
+        if (f == null || !f.exists()) return 0;
+        if (f.isFile()) return f.length();
+        long s = 0;
+        java.io.File[] cs = f.listFiles();
+        if (cs != null) for (java.io.File c : cs) s += dirSize(c);
+        return s;
+    }
 
     /** 弹幕 XML（压缩与否由服务器决定，此处按未压缩解析；数量限制 8000） */
     public void danmaku(long aid, final CB cb) {

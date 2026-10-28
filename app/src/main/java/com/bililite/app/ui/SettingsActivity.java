@@ -57,9 +57,16 @@ public class SettingsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.val_crash)).setText(
                 com.bililite.app.CrashReport.hasNewCrash(this) ? "有崩溃记录!" : "");
         bind(R.id.row_cache, v -> {
-            ImageLoader.clearDiskCache();
-            toast("图片缓存已清除");
+            final TextView val = (TextView) findViewById(R.id.val_cache);
+            BiliApi.get(this).clearVideoCache((d, err) -> {
+                ImageLoader.clearDiskCache();
+                runOnUiThread(() -> {
+                    toast(err == null ? "缓存已清除（output/bililite + 图片）" : "部分清理失败: " + err);
+                    updateCacheSize(val);
+                });
+            });
         });
+        updateCacheSize((TextView) findViewById(R.id.val_cache));
         bind(R.id.row_about, v -> new AlertDialog.Builder(this)
                 .setTitle("BiliLite " + BuildConfig.VERSION_NAME)
                 .setMessage("轻量 B 站客户端\n开源协议：MIT\n项目：github.com/redgtab/QwenCoder")
@@ -75,6 +82,22 @@ public class SettingsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.val_auto_play)).setText(api.prefsBool("auto_builtin_play", false) ? "开" : "关");
         ((TextView) findViewById(R.id.val_dm_limit)).setText(new String[]{"少（省电流畅）", "标准", "多（热闹）"}[api.prefsInt("dm_limit_level", 1)]);
         ((TextView) findViewById(R.id.val_version)).setText(BuildConfig.VERSION_NAME);
+    }
+
+    private void updateCacheSize(TextView tv) {
+        new Thread(() -> {
+            long bytes = BiliApi.get(this).cacheSizeBytes();
+            String txt = bytes > 1024*1024 ? String.format("%.1f MB", bytes/1048576.0)
+                    : bytes > 1024 ? String.format("%.0f KB", bytes/1024.0) : bytes + " B";
+            runOnUiThread(() -> tv.setText(txt));
+        }).start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TextView tv = findViewById(R.id.val_cache);
+        if (tv != null) updateCacheSize(tv);
     }
 
     private void bind(int id, android.view.View.OnClickListener l) {

@@ -11,8 +11,8 @@ android {
         // Android 4.4.3 (KitKat) => API 19；TV 专用版（遥控器操作）
         minSdk 19
         targetSdk 29
-        versionCode 3
-        versionName "2.0.1"
+        versionCode 4
+        versionName "2.0.2"
     }
 
     buildTypes {

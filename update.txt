@@ -1,2 +1,2 @@
-version=2.0.1
-notes=改为专有TV版APK（Leanback启动，遥控器D-Pad操作）|新增崩溃日志收集与GitHub Issue一键反馈|新增启动自动检查更新(update.txt)|优化图片加载与分页性能|修复部分已知Bug
+version=2.0.2
+notes=更新遥控器按键适配（播放页OK暂停/左右快进退±10s/回放快进±30s/菜单键切画质/MEDIA媒体键）|视频缓存存储至内部存储output/bililite并支持查看大小与一键清理|全新绘制BiliLite应用图标（粉TV标）|内置播放器弹幕联动优化

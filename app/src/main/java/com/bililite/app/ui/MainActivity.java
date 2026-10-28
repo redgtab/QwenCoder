@@ -71,6 +71,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // ---- TV 遥控器适配：Tab 栏可聚焦，DPAD_UP 从内容区回到 Tab 栏 ----
+        int[] tabIds = {R.id.tab_popular, R.id.tab_ranking, R.id.tab_favorite,
+                R.id.tab_history, R.id.tab_mine, R.id.tab_dynamic, R.id.tab_settings};
+        for (int id : tabIds) {
+            View tv = findViewById(id);
+            tv.setFocusable(true);
+            tv.setBackgroundResource(R.drawable.bg_tv_focus);
+        }
+        findViewById(R.id.btn_search).setFocusable(true);
+        findViewById(R.id.btn_login_top).setFocusable(true);
+        recycler.setFocusable(true);
+
         ((TextView) findViewById(R.id.tab_popular)).setOnClickListener(v -> switchTab(TAB_POPULAR));
         ((TextView) findViewById(R.id.tab_ranking)).setOnClickListener(v -> switchTab(TAB_RANKING));
         ((TextView) findViewById(R.id.tab_favorite)).setOnClickListener(v -> switchTab(TAB_FAV));
@@ -122,6 +134,35 @@ public class MainActivity extends AppCompatActivity {
                         .setNegativeButton("以后再说", null).show());
             } catch (Exception ignore) {}
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, android.view.KeyEvent event) {
+        // 遥控器：在顶部区域按 DOWN 直接进入内容列表；列表按 UP 回到 Tab 栏
+        View focused = getCurrentFocus();
+        if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN && focused != null) {
+            int[] loc = new int[2];
+            focused.getLocationOnScreen(loc);
+            if (loc[1] < dp(96)) {   // 位于顶栏/Tab栏区域
+                View first = recycler.getChildAt(0);
+                if (first != null) { first.requestFocus(); return true; }
+                recycler.requestFocus();
+                return true;
+            }
+        }
+        if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_UP && focused != null) {
+            int[] loc = new int[2];
+            focused.getLocationOnScreen(loc);
+            if (loc[1] >= dp(96)) {
+                findViewById(R.id.tab_popular).requestFocus();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private int dp(int v) {
+        return (int) (v * getResources().getDisplayMetrics().density + 0.5f);
     }
 
     @Override
